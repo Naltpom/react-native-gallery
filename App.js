@@ -1,20 +1,47 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { Image, ScrollView, Text, TouchableOpacity, View } from "react-native";
+import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
+import { useState } from "react";
+import { s } from "./App.style";
+import * as ImagePicker from "expo-image-picker";
 
 export default function App() {
+  const [imageURIList, setImageURIList] = useState([]);
+
+  async function pickImageAsync() {
+    const result = await ImagePicker.launchImageLibraryAsync({
+      allowsEditing: true,
+      quality: 1,
+    });
+
+    if (result.canceled) {
+      alert("Aucune image selectionnée");
+    } else {
+      console.log(result);
+      setImageURIList([...imageURIList, result.assets[0].uri]);
+    }
+  }
+
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <SafeAreaProvider>
+      <SafeAreaView style={{ flex: 1 }}>
+        <Text style={s.title}>Mes photos préférées</Text>
+        <View style={s.body}>
+          <ScrollView>
+            {imageURIList.map((imageURI, i) => (
+              <Image
+                key={imageURI + i}
+                source={{ uri: imageURI }}
+                style={{ height: 300, marginVertical: 30, width: "100%" }}
+              />
+            ))}
+          </ScrollView>
+        </View>
+        <View style={s.footer}>
+          <TouchableOpacity style={s.btn} onPress={pickImageAsync}>
+            <Text style={s.btnTxt}>Ajouter photo</Text>
+          </TouchableOpacity>
+        </View>
+      </SafeAreaView>
+    </SafeAreaProvider>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});

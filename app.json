@@ -25,6 +25,12 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "38b3725e-b6e2-4774-9416-bca564aea2eb"
+      }
+    },
+    "owner": "naltpom"
   }
 }
